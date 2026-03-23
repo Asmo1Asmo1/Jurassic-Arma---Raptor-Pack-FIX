@@ -560,6 +560,7 @@ class FSM
       init = /*%FSM<STATEINIT""">*/"_rad = if (isNil ""rup_raptor_maxdist"") then {400} else {rup_raptor_maxdist};" \n
        "" \n
        "_targets = _rap nearTargets _rad;" \n
+       "_targets = if !(isNil ""rup_raptor_targets_side"") then {_targets select {(side (group _x)) == rup_raptor_targets_side}} else {_targets};" \n
        "_targetsA = [];" \n
        "_targetsB = [];" \n
        "_targetsC = [];" \n
