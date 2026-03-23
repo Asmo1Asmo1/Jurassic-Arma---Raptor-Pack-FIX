@@ -61,7 +61,7 @@ waitUntil {
 
     _Ddir = [_victim, _dino] call BIS_fnc_relativeDirTo;
     _rdam = if (!isNil "rup_raptor_dam_maul") then {rup_raptor_dam_maul} else {0.2};
-    [_victim,_rdam,false,"",_Ddir,""] call rup_fnc_deal_damage;
+    [_victim,_rdam,_Ddir,"",_dino] call rup_fnc_deal_damage;
     sleep 1.35;
     false
 };

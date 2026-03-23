@@ -11,7 +11,7 @@ if ((currentWeaponMode _dino) == "Attack") then {
 
     _Ddir = [_victim, _dino] call BIS_fnc_relativeDirTo;
     _rdam = if (!isNil "rup_raptor_dam") then {rup_raptor_dam} else {0.5};
-    [_victim,_rdam,false,"",_Ddir,"RaptorHit1"] call rup_fnc_deal_damage;
+    [_victim,_rdam,_Ddir,"RaptorHit1",_dino] call rup_fnc_deal_damage;
 };
 
 if ((currentWeaponMode _dino) == "JumpAttack") then {

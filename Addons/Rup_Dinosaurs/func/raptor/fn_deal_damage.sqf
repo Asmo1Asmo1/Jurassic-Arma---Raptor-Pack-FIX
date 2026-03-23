@@ -1,13 +1,8 @@
-params ["_victim","_dam","_overall","_part","_Ddir","_snd","_ssource"];
+params ["_victim","_dam","_Ddir","_snd","_ssource"];
 if (isNil "_ssource") then {_ssource = _victim};
 
-if !(_overall) then { /*Shouldn't it be `if (_overall) then ...`? [Asmo]*/
-    _victim setdamage ((damage _victim) + _dam);
-    if (_snd isNotEqualTo "") then {[[_ssource,_snd],"rup_fnc_say3d",1,1,_ssource,true,false] call rup_fnc_MP};
-} else {
-    _dam_part = _victim getHitPointDamage _part;
-    _victim setHitPointDamage [_part, (_dam_part + _dam)];
-};
+_victim setdamage ((damage _victim) + _dam);
+if (_snd isNotEqualTo "") then {[[_ssource,_snd],"rup_fnc_say3d",1,1,_ssource,true,false] call rup_fnc_MP};
 
 if (!isPlayer _victim) exitWith {};
 if (isMultiplayer)

@@ -40,4 +40,4 @@ if (_minDist > 1.5) exitWith {call _hitVehPart};
 
 _Ddir = [_closestCrew,_dino] call BIS_fnc_relativeDirTo;
 _rdam =  if (!isNil "rup_raptor_dam_AI") then {rup_raptor_dam_AI} else {0.2};
-[_closestCrew,_rdam,false,"",_Ddir,"RaptorHit1",_dino] call rup_fnc_deal_damage;
+[_closestCrew,_rdam,_Ddir,"RaptorHit1",_dino] call rup_fnc_deal_damage;
