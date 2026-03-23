@@ -1,6 +1,2 @@
-   _a = _this select 0;
-
-   _b = _this select 1;
-
-
-   _a say3d _b;
+params ["_unit","_sound"];
+_unit say3d _sound;

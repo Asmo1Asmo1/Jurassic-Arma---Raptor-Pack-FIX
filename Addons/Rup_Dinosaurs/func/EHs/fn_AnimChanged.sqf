@@ -1,28 +1,20 @@
-_dino = _this select 0;
-_anm = _this select 1;
+params ["_dino","_anim"];
+if (!alive _dino) exitWith {};
+if (_anim != "Unconscious") exitWith {};
+if (_dino getVariable ["rup_dino_uncon",false]) exitWith {};
 
-_uncon = _dino getvariable "rup_dino_uncon";
+_dino setVariable ["rup_dino_uncon", true];
+sleep ((random 6)+2);
+if (!alive _dino) exitWith {};
 
-if (!alive _dino or _uncon) exitwith {};
 
+_anim = if (isPlayer _dino)
+    then {"Unconscious2"}
+    else {"AI_Attack_Unconscious2"};
 
-if (_anm == "Unconscious") then
-{
-   _dino setvariable ["rup_dino_uncon", true];
-   sleep (random 6)+2;
+[[_dino,_anim],"rup_fnc_switchMove",1,1,_dino,true,false] call rup_fnc_MP;
+[[_dino,"RaptorGetUp"],"rup_fnc_say3d",1,1,nil,true,false] call rup_fnc_MP;
 
-   _anim = "Unconscious2";
-
-   if (!IsPlayer _dino) then
-   {
-      _anim = "AI_Attack_Unconscious2";
-   };
-
-   0 = [[_dino, _anim], "rup_fnc_switchMove", 1, 1, _dino, true, false] call rup_fnc_MP;
-
-   0 = [[_dino, "RaptorGetUp"], "rup_fnc_say3d", 1, 1, nil, true, false] call rup_fnc_MP;
-
-   waituntil {animationstate _dino != _anim};
-
-   _dino setvariable ["rup_dino_uncon", false];
-};
+waituntil {sleep 0.05; !alive _dino || {(animationState _dino) != _anim}};
+if (!alive _dino) exitWith {};
+_dino setVariable ["rup_dino_uncon", false];
