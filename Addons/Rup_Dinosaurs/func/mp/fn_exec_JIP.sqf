@@ -1,8 +1,7 @@
    rup_get_JIP_array = [player];
 
    publicVariableServer "rup_get_JIP_array";
-
-   waituntil {!IsNil "RUP_JIP_array"};
+   waituntil {sleep 0.1; !isNil "RUP_JIP_array"};
 
    {
       _para = _x select 0;
@@ -22,7 +21,7 @@
          case (2):
          {
               _code = format["_para spawn %1",_fnc];
-              call compile _code;																																																			
+              call compile _code;
          };
       };
    } foreach RUP_JIP_array;

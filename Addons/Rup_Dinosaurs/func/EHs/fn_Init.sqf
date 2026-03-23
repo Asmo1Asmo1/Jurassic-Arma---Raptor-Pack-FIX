@@ -89,7 +89,7 @@ _dino addeventhandler ["Hit",
 ///////////////////UI - EHs////////////////////////////////////////////////////////////
 
 waitUntil {sleep 0.1; !isNull findDisplay 46};
-(findDisplay 46) displaySetEventHandler ["KeyDown",{
+(findDisplay 46) displayAddEventHandler ["KeyDown",{
    // params ["","_key","_shift","_ctrl","_alt"];
    private _key = _this select 1;
 
@@ -104,4 +104,5 @@ waitUntil {sleep 0.1; !isNull findDisplay 46};
          if (player isKindOf "Raptor" && {dialog}) then {closeDialog 0};
       };
    };
+   false
 }];
