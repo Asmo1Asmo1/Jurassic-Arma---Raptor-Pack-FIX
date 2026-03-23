@@ -1,0 +1,2 @@
+Drop your public .bikey here for clients who verify signatures.
+Sign Rup_Dinosaurs_FIX.pbo with the matching .biprivatekey before publishing to Steam Workshop.

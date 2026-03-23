@@ -1,0 +1,28 @@
+Build Rup_Dinosaurs_FIX.pbo
+---------------------------
+1. Pack the folder:
+   Rup_Dinosaurs_FIX\Addons\Rup_Dinosaurs_FIX\
+   into a PBO named Rup_Dinosaurs_FIX.pbo with addon prefix Rup_Dinosaurs_FIX (see pbo.json).
+
+   Tools: Arma 3 Addon Builder, Mikero's MakePbo, or Hemtt.
+
+2. Place the PBO in:
+   Rup_Dinosaurs_FIX\addons\Rup_Dinosaurs_FIX.pbo
+   (lowercase "addons" is fine for Arma; match your launcher layout.)
+
+3. Sign for Workshop (your key, not the original author's):
+   DSSignFile Rup_Dinosaurs_FIX.pbo YourName.biprivatekey
+   Copy the generated .bisign next to the PBO.
+   Put YourName.bikey in Rup_Dinosaurs_FIX\keys\
+
+Steam Workshop
+--------------
+- Publish as a new item. Set publishedid in meta.cpp after Steam assigns one.
+- Add required dependency on the original mod Workshop ID: 332909923
+- Enable both mods when testing: original Jurassic Arma - Raptor Pack + this FIX.
+
+Local test
+----------
+- Subscribe to or enable the original mod.
+- Copy this whole Rup_Dinosaurs_FIX folder into Arma 3 root as @Rup_Dinosaurs_FIX (optional @ prefix).
+- Ensure Rup_Dinosaurs_FIX.pbo is in @Rup_Dinosaurs_FIX\addons\
