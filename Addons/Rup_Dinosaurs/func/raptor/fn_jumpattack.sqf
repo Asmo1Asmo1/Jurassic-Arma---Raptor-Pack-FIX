@@ -1,90 +1,69 @@
-   _dino = _this select 0;
+_dino = _this select 0;
+_dino setVariable ["rup_dino_busy", true];
 
-   _dino setvariable ["rup_dino_busy", true];
+sleep 0.8;
+if (!alive _dino) exitWith {_dino setVariable ["rup_dino_busy", false]};
 
-    sleep 0.8;
+_victim = [_dino,3,"jt_Head_C"] call rup_fnc_get_victim;
+if (isNil "_victim" || {isNull _victim}) exitWith {_dino setVariable ["rup_dino_busy", false];};
+if (!alive _victim) exitWith {detach _victim; _dino setVariable ["rup_dino_busy", false]};
+if (_victim isKindOf "Raptor") exitWith {_dino setVariable ["rup_dino_busy", false];};
 
-   _victim = [_dino, 3, "jt_Head_C"] call rup_fnc_get_victim;
+[[_victim,"RaptorJumpHitHuman"],"rup_fnc_say3d",1,1,nil,true,false] call rup_fnc_MP;
+[[_victim,"RaptorMenschUmfall"],"rup_fnc_switchMove",1,1,_victim,true,false] call rup_fnc_MP;
+_victim attachTo [_dino,[0,0.5,0]];
+_victim setDir 180;
 
-   if (IsNil "_victim") exitwith {_dino setvariable ["rup_dino_busy", false];};
-   if (IsNull _victim) exitwith {_dino setvariable ["rup_dino_busy", false];};
-   if ((typeOf _victim) iskindof "Raptor") exitwith {_dino setvariable ["rup_dino_busy", false];};
-   if (!alive _victim) exitwith {detach _victim; _dino setvariable ["rup_dino_busy", false];};
+waitUntil {
+    sleep 0.05;
+    if !(_dino getVariable ["rup_dino_busy",false]) exitWith {true};
+    if (!alive _victim) exitWith {
+        detach _victim;
+        _dino setVariable ["rup_dino_busy", false];
+        [[_victim,"RaptorMenschKill"],"rup_fnc_switchMove",1,1,_victim,true,false] call rup_fnc_MP;
 
-   if (!IsNil "_victim") then
-   {
-      0 = [[_victim, "RaptorJumpHitHuman"], "rup_fnc_say3d", 1, 1, nil, true, false] call rup_fnc_MP;
+        _anim = if (isPlayer _dino)
+            then {"Raptor_JumpAttackEatKILL"}
+            else {"AI_Attack_JumpAttackEatKILL"};
 
-      0 = [[_victim, "RaptorMenschUmfall"], "rup_fnc_switchMove", 1, 1, _victim, true, false] call rup_fnc_MP;
+        [[_dino,_anim],"rup_fnc_switchMove",1,1,_dino,true,false] call rup_fnc_MP;
+        [[_dino,"HumanNeckBreak"],"rup_fnc_say3d",1,1,nil,true,false] call rup_fnc_MP;
+        true
+    };
+    if (!alive _dino) exitWith {
+        detach _victim;
+        _dino setVariable ["rup_dino_busy", false];
 
-      _victim attachTo [_dino,[0,0.5,0]];
+        [[_victim,"RaptorMenschAufstehen"],"rup_fnc_switchMove",1,1,_victim,true,false] call rup_fnc_MP;
+        [[_victim,"RaptorDeath"],"rup_fnc_say3d",1,1,nil,true,false] call rup_fnc_MP;
 
-      _victim setDir 180;	  
+        _anim = if (isPlayer _dino)
+            then {"Raptor_JumpAttackEatDEATH"}
+            else {"AI_Attack_JumpAttackEatDEATH"};
 
-      while {_dino getvariable "rup_dino_busy"} do
-      {
-         if (!alive _victim) exitWith                
-         {
-	    detach _victim;
+        [[_dino,_anim],"rup_fnc_switchMove",1,1,_dino,true,false] call rup_fnc_MP;
+        sleep 2;
+        true
+    };
 
-            _dino setvariable ["rup_dino_busy", false];
+    _anim = if (isPlayer _dino)
+        then {"Raptor_JumpAttack"}
+        else {"AI_Attack_JumpAttack"};
+    waituntil {sleep 0.05; !alive _dino || {(animationState _dino) != _anim}};
 
-            0 = [[_victim, "RaptorMenschKill"], "rup_fnc_switchMove", 1, 1, _victim, true, false] call rup_fnc_MP;
+    _anim = if (isPlayer _dino)
+        then {"Raptor_JumpAttackEat"}
+        else {"AI_Attack_JumpAttackEat"};
 
-            _anim = "Raptor_JumpAttackEatKILL";
+    [[_dino,_anim],"rup_fnc_switchMove",1,1,_dino,true,false] call rup_fnc_MP;
+    [[_victim,"RaptorMenschZappeln"],"rup_fnc_switchMove",1,1,_victim,true,false] call rup_fnc_MP;
+    [[_dino,"RaptorZerfleischen"],"rup_fnc_say3d",1,1,nil,true,false] call rup_fnc_MP;
 
-            if (!IsPlayer _dino) then {_anim = "AI_Attack_JumpAttackEatKILL"};
+    _Ddir = [_victim, _dino] call BIS_fnc_relativeDirTo;
+    _rdam = if (!isNil "rup_raptor_dam_maul") then {rup_raptor_dam_maul} else {0.2};
+    [_victim,_rdam,_Ddir,"",_dino] call rup_fnc_deal_damage;
+    sleep 1.35;
+    false
+};
 
-            0 = [[_dino, _anim], "rup_fnc_switchMove", 1, 1, _dino, true, false] call rup_fnc_MP; 
-
-            0 = [[_dino, "HumanNeckBreak"], "rup_fnc_say3d", 1, 1, nil, true, false] call rup_fnc_MP; 
-  
-         };
-         if (!alive _dino) exitWith                
-         {
-            detach _victim;
-
-            _dino setvariable ["rup_dino_busy", false];
-
-            0 = [[_victim, "RaptorMenschAufstehen"], "rup_fnc_switchMove", 1, 1, _victim, true, false] call rup_fnc_MP; 
-
-            0 = [[_victim, "RaptorDeath"], "rup_fnc_say3d", 1, 1, nil, true, false] call rup_fnc_MP; 
-
-            _anim = "Raptor_JumpAttackEatDEATH";
-
-            if (!IsPlayer _dino) then {_anim = "AI_Attack_JumpAttackEatDEATH"};
-
-            0 = [[_dino, _anim], "rup_fnc_switchMove", 1, 1, _dino, true, false] call rup_fnc_MP; 
-
-	    sleep 2; 
-	
-         };
-         if (!alive _victim) exitwith {detach _victim; _dino setvariable ["rup_dino_busy", false];};
-
-         _anim = "Raptor_JumpAttack";
-
-         if (!IsPlayer _dino) then {_anim = "AI_Attack_JumpAttack"};
-
-         waituntil {animationState _dino != _anim};
-
-         _anim = "Raptor_JumpAttackEat";
-
-         if (!IsPlayer _dino) then {_anim = "AI_Attack_JumpAttackEat"};
-
-         0 = [[_dino, _anim], "rup_fnc_switchMove", 1, 1, _dino, true, false] call rup_fnc_MP; 
-
-         0 = [[_victim, "RaptorMenschZappeln"], "rup_fnc_switchMove", 1, 1, _victim, true, false] call rup_fnc_MP; 
-
-         0 = [[_dino, "RaptorZerfleischen"], "rup_fnc_say3d", 1, 1, nil, true, false] call rup_fnc_MP;
-
-        _Ddir = [_victim, _dino] call BIS_fnc_relativeDirTo;
-
-        _rdam = 1*rup_raptor_dam_maul;
-
-        [_victim, _rdam, false, "", _Ddir, ""] call rup_fnc_deal_damage;
-
-        sleep 1.35;
-       
-      };
-   };
-   _dino setvariable ["rup_dino_busy", false];
+_dino setVariable ["rup_dino_busy", false];

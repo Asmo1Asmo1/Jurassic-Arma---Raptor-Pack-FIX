@@ -1,6 +1,2 @@
-   _a = _this select 0;
-
-   _b = _this select 1;
-
-
-   _a setIdentity _b;
+params ["_unit","_identity"];
+_unit setIdentity _identity;
