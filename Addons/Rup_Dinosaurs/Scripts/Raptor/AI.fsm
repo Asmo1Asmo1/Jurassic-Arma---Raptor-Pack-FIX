@@ -557,7 +557,7 @@ class FSM
     class __5
     {
       name = "__5";
-      init = /*%FSM<STATEINIT""">*/"_rad = rup_raptor_maxdist;" \n
+      init = /*%FSM<STATEINIT""">*/"_rad = if (isNil ""rup_raptor_maxdist"") then {400} else {rup_raptor_maxdist};" \n
        "" \n
        "_targets = _rap nearTargets _rad;" \n
        "_targetsA = [];" \n
