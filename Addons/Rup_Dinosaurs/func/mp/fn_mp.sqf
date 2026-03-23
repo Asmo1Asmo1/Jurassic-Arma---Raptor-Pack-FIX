@@ -1,87 +1,47 @@
-   _para = _this select 0;
+params ["_para","_fnc","_type","_receiver","_client","_local","_perst"];
 
-   _fnc = _this select 1;
+rup_mp = [_para,_fnc,_type];
 
-   _type = _this select 2;
-
-   _receiver = _this select 3;
-
-   _client = _this select 4;
-
-   _local = _this select 5;
-
-   _perst = _this select 6;
-   
-   rup_mp = [_para,_fnc,_type];
-
-   switch (_receiver) do
+switch (_receiver) do
+{
+   case (1): {publicVariable "rup_mp"};
+   case (2): {publicVariableServer "rup_mp"};
+   case (3):
    {
-      case (1):
+      if (typeName _client == "SCALAR") then
       {
-          publicvariable "rup_mp";
-      };
-      case (2):
-      {
-          publicvariableServer "rup_mp";
-      };
-      case (3):
-      {
-         if (typeName _client == "SCALAR") then
+         //forEach nearby units that are players and not the player
          {
-            _men = (player nearEntities [["CaManBase"], _client]) - [player];
-            {
-               if (IsPlayer _x) then
-               {
-                  _owner = owner _x;
-
-                  if (_owner == 0) then
-                  {
-                     publicvariableServer "rup_mp";
-                  } else
-                  {
-                     _owner publicvariableClient "rup_mp";
-                  };
-               };
-            } foreach _men;
-         } else
-         {
-               _owner = owner _client;
-
-               if (_owner == 0) then
-               {
-                  publicvariableServer "rup_mp";
-               } else
-               {
-                  _owner publicvariableClient "rup_mp";
-               };
-         };
+            _owner = owner _x;
+            if (_owner == 0)
+               then {publicVariableServer "rup_mp"}
+               else {_owner publicVariableClient "rup_mp"};
+         } foreach (((player nearEntities [["CaManBase"], _client]) - [player]) select {isPlayer _x});
+      } else {
+         _owner = owner _client;
+         if (_owner == 0)
+            then {publicVariableServer "rup_mp"}
+            else {_owner publicVariableClient "rup_mp"};
       };
    };
-   if (_perst) then
-   {
-         if (IsServer) then
-         {
-            RUP_JIP_array = RUP_JIP_array + [[_para, _fnc, _type]];
-         } else
-         {
-            rup_set_JIP_array = [_para,_fnc,_type];
-            
-            publicvariableServer "rup_set_JIP_array";
-         };
+};
+
+if (_perst) then
+{
+   if (isServer) then {
+      if (isNil "RUP_JIP_array") then {RUP_JIP_array = []};
+      RUP_JIP_array = RUP_JIP_array + [[_para, _fnc, _type]];
+   } else {
+      rup_set_JIP_array = [_para,_fnc,_type];
+      publicVariableServer "rup_set_JIP_array";
    };
-   if (_local) then
-   {
-      switch (_type) do
-      {
-         case (1):
-         {
-              _code = format["_para call %1",_fnc];
-              call compile _code;
-         };
-         case (2):
-         {
-              _code = format["_para spawn %1",_fnc];
-              call compile _code;																																																			
-         };
-      };
+};
+
+if (_local) then
+{
+   private _fncCode = missionNamespace getVariable [_fnc,{}];
+   switch (_type) do {
+      case (1): {_para call _fncCode};
+      case (2): {_para spawn _fncCode};
    };
+};

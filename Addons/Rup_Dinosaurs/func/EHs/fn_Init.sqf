@@ -1,4 +1,4 @@
-waituntil {!IsNull player};
+waituntil {sleep 0.1; !isNull player};
 
 _dino = _this select 0;
 
@@ -15,7 +15,7 @@ _HUD = [] execVM "Rup_Dinosaurs\ui\HUD\HUD.sqf";
 ////////////////////X-MAS/////////////////////////////
 
 _date = date;
-_month = _date select 1; 
+_month = _date select 1;
 _day = _date select 2;
 
 if (_month == 12 && _day == 24) then
@@ -45,50 +45,64 @@ if (IsNil "_uncon") then
 
 ///////////////////Unit - EHs////////////////////////////////////////////////////////////
 
-_dino addeventhandler ["handledamage", 
+_dino addeventhandler ["handledamage",
 {
    _this call RUP_fnc_handledamage;
 }];
 
-_dino addeventhandler ["Fired", 
+_dino addeventhandler ["Fired",
 {
    _this spawn RUP_fnc_Fired;
 }];
 
-_dino addeventhandler ["Respawn", 
+_dino addeventhandler ["Respawn",
 {
    _this spawn RUP_fnc_init;
 }];
 
-_dino addeventhandler ["Killed", 
+_dino addeventhandler ["Killed",
 {
    _this call RUP_fnc_Killed;
 }];
 
 
-_dino addeventhandler ["InventoryOpened", 
+_dino addeventhandler ["InventoryOpened",
 {
    true
 }];
 
-_dino addeventhandler ["take", 
+_dino addeventhandler ["take",
 {
    removeallweapons (_this select 0); (_this select 0) addmagazine 'RaptorAttack_Mag'; (_this select 0) addweapon 'RaptorAttack'
 }];
 
-_dino addeventhandler ["AnimChanged", 
+_dino addeventhandler ["AnimChanged",
 {
    _this spawn RUP_fnc_AnimChanged;
 }];
 
-_dino addeventhandler ["Hit", 
+_dino addeventhandler ["Hit",
 {
    _this call RUP_fnc_hit;
 }];
 
 ///////////////////UI - EHs////////////////////////////////////////////////////////////
 
-waitUntil {!isNull findDisplay 46};
+waitUntil {sleep 0.1; !isNull findDisplay 46};
+(findDisplay 46) displayAddEventHandler ["KeyDown",{
+   // params ["","_key","_shift","_ctrl","_alt"];
+   private _key = _this select 1;
 
-(findDisplay 46) displaySetEventHandler ["KeyDown","_nul = [_this, player] execVM 'Rup_Dinosaurs\Scripts\Raptor\controls_down.sqf'"];
-(findDisplay 46) displaySetEventHandler ["KeyUP","_nul = [_this, player] execVM 'Rup_Dinosaurs\Scripts\Raptor\controls_up.sqf'"];
+   switch (true) do {
+      case (_key == 57): { /// Space
+         if (player isKindOf "Raptor" && {!(player getvariable ["rup_dino_busy",false])}) then {[player,0.7] call rup_fnc_jump};
+      };
+      case (_key == 34): { /// G
+         if (player isKindOf "Raptor" && {!(player getvariable ["rup_dino_busy",false])}) then {[player,0.7] spawn rup_fnc_eat};
+      };
+      case (_key in (actionKeys "Gear")): {
+         if (player isKindOf "Raptor" && {dialog}) then {closeDialog 0};
+      };
+   };
+   false
+}];

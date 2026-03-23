@@ -1,51 +1,32 @@
-if (!IsMultiplayer) exitwith {RUP_JIP_array = [];};
-
-if (IsServer) then
-{
-   RUP_JIP_array = [];
+private _initJipArray = {
+   if (isNil "RUP_JIP_array") then {RUP_JIP_array = []};//Fix init issue
 };
+if (!isMultiplayer) exitwith {call _initJipArray};
+if (isServer) then {call _initJipArray};
 
-"rup_mp" addPublicVariableEventHandler 
-{ 
+"rup_mp" addPublicVariableEventHandler {
+   (_this select 1) params ["_para","_fnc","_type"];
 
-   _val = _this select 1;
-   _para = _val select 0;
-   _fnc = _val select 1;
-   _type = _val select 2;
-
-   switch (_type) do
-   {
-      case (1):
-      {
+   switch (_type) do {
+      case 1: {
          _code = format["_para call %1",_fnc];
          call compile _code;
       };
-      case (2):
-      {
+      case 2: {
          _code = format["_para spawn %1",_fnc];
          call compile _code;
       };
    };
-};  
+};
 
-"rup_set_JIP_array" addPublicVariableEventHandler 
-{ 
-
-   _val = _this select 1;
-   _para = _val select 0;
-   _fnc = _val select 1;
-   _type = _val select 2;
-
+"rup_set_JIP_array" addPublicVariableEventHandler {
+   (_this select 1) params ["_para","_fnc","_type"];
+   if (isNil "RUP_JIP_array") then {RUP_JIP_array = []};//Fix init issue
    RUP_JIP_array = RUP_JIP_array + [[_para, _fnc, _type]];
 };
 
-"rup_get_JIP_array" addPublicVariableEventHandler 
-{ 
-
-   _val = _this select 1;
-   _unit = _val select 0;
-
-   _owner = owner _unit;
-
+"rup_get_JIP_array" addPublicVariableEventHandler {
+   (_this select 1) params ["_unit"];
+   private _owner = owner _unit;
    _owner publicVariableClient "RUP_JIP_array";
 };
