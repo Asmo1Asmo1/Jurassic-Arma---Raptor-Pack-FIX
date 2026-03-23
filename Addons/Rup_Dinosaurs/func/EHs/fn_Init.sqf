@@ -98,7 +98,7 @@ waitUntil {sleep 0.1; !isNull findDisplay 46};
          if (player isKindOf "Raptor" && {!(player getvariable ["rup_dino_busy",false])}) then {[player,0.7] call rup_fnc_jump};
       };
       case (_key == 34): { /// G
-         if (player isKindOf "Raptor" && {!(player getvariable ["rup_dino_busy",false])}) then {[player,0.7] call rup_fnc_eat};
+         if (player isKindOf "Raptor" && {!(player getvariable ["rup_dino_busy",false])}) then {[player,0.7] spawn rup_fnc_eat};
       };
       case (_key in (actionKeys "Gear")): {
          if (player isKindOf "Raptor" && {dialog}) then {closeDialog 0};

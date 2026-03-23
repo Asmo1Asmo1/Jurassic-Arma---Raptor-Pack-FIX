@@ -19,7 +19,7 @@ class RscTitles
 	class RUP_Rapt_HUD
 	{
 		idd=-1;
-		duration="1.#INF";
+		duration=1e+6;
 		fadeIn=0;
 		fadeOut=0;
 		name="";
