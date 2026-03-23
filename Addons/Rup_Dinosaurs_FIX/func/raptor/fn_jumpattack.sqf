@@ -56,8 +56,8 @@ waitUntil {
         else {"AI_Attack_JumpAttackEat"};
 
     [[_dino,_anim],"rup_fnc_switchMove",1,1,_dino,true,false] call rup_fnc_MP;
-    [[_victim,"RaptorMenschZappeln"],"rup_fnc_switchMove",1,1,_victim,true,false] call rup_fnc_MP;
     [[_dino,"RaptorZerfleischen"],"rup_fnc_say3d",1,1,nil,true,false] call rup_fnc_MP;
+    if ((alive _victim) == (isAwake _victim)) then {[[_victim,"RaptorMenschZappeln"],"rup_fnc_switchMove",1,1,_victim,true,false] call rup_fnc_MP};
 
     _Ddir = [_victim, _dino] call BIS_fnc_relativeDirTo;
     _rdam = if (!isNil "rup_raptor_dam_maul") then {rup_raptor_dam_maul} else {0.2};
