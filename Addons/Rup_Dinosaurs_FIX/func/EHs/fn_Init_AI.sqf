@@ -1,4 +1,5 @@
 _dino = _this select 0;
+if !(_dino isKindOf "Raptor") exitWith {};
 
 //////////////Identity/////////////////////////////////
 
